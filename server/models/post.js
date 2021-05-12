@@ -1,49 +1,44 @@
-import moment from 'moment';
-import mongoose, { mongo } from 'mongoose';
+import mongoose from "mongoose";
+import moment from "moment";
 
-const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
+const PostSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  contents: {
+    type: String,
+    required: true,
+  },
+  views: {
+    type: Number,
+    default: -2,
+  },
+  fileUrl: {
+    type: String,
+    default: "https://source.unsplash.com/random/301x201",
+  },
+  date: {
+    type: String,
+    default: moment().format("YYYY-MM-DD hh:mm:ss"),
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "category",
+  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "comment",
     },
-    email : {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        enum: ["MainJuin", "Subjuin", "User"],
-        default: "User"
-    },
-    register_date: {
-        type: Date,
-        default: moment().format("YYYY-MM-DD")
-    },
-    comments: [
-        {
-            post_id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "posts"
-            },
-            comment_id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "comments"
-            }
-        }
-    ],
-    posts: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "posts"
-        }
-    ]
+  ],
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
 });
 
-const User = mongoose.model("user", UserSchema);
+const Post = mongoose.model("post", PostSchema);
 
-export default User;
+export default Post;
